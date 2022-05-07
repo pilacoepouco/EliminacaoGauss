@@ -1,0 +1,79 @@
+body{
+    background-image:url(pexels-lumn-167682.jpg);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+#dados{
+       padding: 15px 30px;
+       background: rgba( 255, 255, 255, 0.20 );
+       box-shadow: 0 8px 32px 0 rgb(31 38 135 / 37%);
+       backdrop-filter: blur( 13.5px );
+       -webkit-backdrop-filter: blur( 13.5px );
+       border-radius: 10px;
+       border: 1px solid rgba( 255, 255, 255, 0.18 );
+       display: flex;
+       flex-direction: column;
+}
+
+#dados input{
+    margin-bottom: 10px;
+}
+table input {
+    max-width: 3rem;
+}
+#dados h2{
+    text-align: center;
+}
+#dados p label{
+    display: inline-block;
+    width: 40%;
+    text-align: right;
+}
+#dados p input{
+    display: inline-block;
+    width: 30%;
+}
+.button {
+    margin: 2%;
+    border-top: 1px solid #96d1f8;
+    background: #65a9d7;
+    background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
+    background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+    background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+    background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+    background: -o-linear-gradient(top, #3e779d, #65a9d7);
+    padding: 6px 12px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+    -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+    box-shadow: rgba(0,0,0,1) 0 1px 0;
+    text-shadow: rgba(0,0,0,.4) 0 1px 0;
+    color: white;
+    font-size: 24px;
+    font-family: Georgia, Serif;
+    text-decoration: none;
+    vertical-align: middle;
+    }
+ .button:hover {
+    border-top-color: #28597a;
+    background: #28597a;
+    color: #ccc;
+    }
+ .button:active {
+    border-top-color: #1b435e;
+    background: #1b435e;
+    }
+
+    .alunos{
+        position:absolute;
+        bottom: 2rem;
+        right: 2rem;
+        font-size: 2rem;
+    }
