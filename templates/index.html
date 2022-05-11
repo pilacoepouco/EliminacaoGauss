@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Calculo Numerico</title>
-    <meta charset="UTF-8" />
-    <meta name="description" content="Calculo Numerico | Bissecção" />
-    <meta lang="pt-BR" />
-    <link href="../static/css/style.css" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <h1>Cálculo Númerico</h1>
-    <div id="dados">
-      <h2>Eliminação de Gauss</h2>
-      <input
-        type="number"
-        min="2"
-        max="10"
-        placeholder="Mín.: 2 | Máx.: 10"
-        id="qtd"
-      />
-      <form method="POST" id="form-values">
-        <table id="table" border="1"></table>
-      </form>
-    </div>
-    <input class="button" type="button" value="Calcular" />
-    <div class="alunos">Jeferson Shimoda<br />Leandro Negrão</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-      $("#qtd").on("change", function (e) {
-        var qtd = parseInt($(this).val());
-        if (qtd < 2 || qtd > 10) {
-          $(this).val("");
-          $("#table").html("");
-          return;
-        }
-        criarTabela(qtd);
-      });
+<head>
+  <title>Calculo Numerico</title>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Calculo Numerico | Bissecção" />
+  <meta lang="pt-BR" />
+  <link href="../static/css/style.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap"
+    rel="stylesheet" />
+</head>
 
-      function criarTabela(qtd) {
-        var html = ``;
-        for (let linha = 1; linha <= qtd; linha++) {
-          html += `<tr>`;
-          for (let coluna = 1; coluna <= qtd + 1; coluna++) {
-            let name = `a${linha}${coluna}`;
-            if (coluna == qtd + 1) {
-              name = `b${linha}`;
-            }
-            html += `<td><input name="${name}" placeholder="${name}"/></td>`;
-          }
-          html += `</tr>`;
-        }
-        $("#table").html(html);
+<body>
+  <h1>Cálculo Númerico</h1>
+  <div id="dados">
+    <h2>Eliminação de Gauss</h2>
+    <input type="number" min="2" max="10" placeholder="Mín.: 2 | Máx.: 10" id="qtd" />
+    <form method="POST" id="form-values">
+      <table id="table" border="1"></table>
+    </form>
+  </div>
+  <input class="button" type="button" value="Calcular" />
+  <div class="alunos">Jeferson Shimoda<br />Leandro Negrão</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    // $("#qtd").on("change", function (e) {
+
+    let input = document.querySelector('#qtd');
+
+    input.oninput = handleInput;
+
+    function handleInput(e) {
+      var qtd = parseInt($(this).val());
+      if (qtd < 2 || qtd > 10) {
+        $(this).val("");
+        $("#table").html("");
+        return;
       }
-    </script>
-  </body>
+      criarTabela(qtd);
+    }
+    
+    function criarTabela(qtd) {
+      var html = ``;
+      for (let linha = 1; linha <= qtd; linha++) {
+        html += `<tr>`;
+        for (let coluna = 1; coluna <= qtd + 1; coluna++) {
+          let name = `a${linha}${coluna}`;
+          if (coluna == qtd + 1) {
+            name = `b${linha}`;
+          }
+          html += `<td><input name="${name}" placeholder="${name}"/></td>`;
+        }
+        html += `</tr>`;
+      }
+      $("#table").html(html);
+    }
+  </script>
+</body>
+
 </html>
