@@ -8,28 +8,21 @@ length = linhas * (linhas+1)
 matrix = np.arange(length).reshape(linhas, colunas)+1
 print(matrix)
 
-for linha in range(0, linhas):
-    pivo = matrix[linha][linha]
-    linha_pivo = linha
-    multi = 0
-    for coluna in range(linha, colunas):
-        # linhaJ = coluna + 1
-        if (coluna+1) < linhas:
-            linhaJ = coluna + 1
-            multi = matrix[linhaJ][linha] / pivo
-            # for coluna_res in range(0, colunas):
-            # print(matrix[linhaJ][coluna_res])
-            matrix[linhaJ][linha] = matrix[linhaJ][linha] - \
-                multi*matrix[linha_pivo][linha]
-            # print(matrix[linhaJ][linha])
-        # if linha != 0:
-            # print(matrix[linha][coluna])
+for linha_pivo in range(linhas-1):
+    for linha in range(linha_pivo+1, linhas):
+        pivo = matrix[linha_pivo][linha_pivo]
+        multi = matrix[linha][linha_pivo] / pivo
+        for coluna in range(linha_pivo+1, colunas):
+            matrix[linha][coluna] = matrix[linha][coluna] - \
+                multi*matrix[linha_pivo][coluna]
+        matrix[linha][linha_pivo] = matrix[linha][linha_pivo] - \
+            multi*matrix[linha_pivo][linha_pivo]
 
-print(matrix)
+
 a = np.array([line[:-1] for line in matrix])
 b = [line[-1] for line in matrix]
-ans = np.linalg.solve(a, b)
-
-print(a)
-print(b)
-print(ans)
+try:
+    ans = np.linalg.solve(a, b)
+    print(ans)
+except:
+    print("Não é possivel resolver a matriz")
