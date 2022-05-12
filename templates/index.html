@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap"
     rel="stylesheet" />
+
 </head>
 
 <body>
@@ -19,14 +20,19 @@
   <div id="dados">
     <h2>Eliminação de Gauss</h2>
     <input type="number" min="2" max="10" placeholder="Mín.: 2 | Máx.: 10" id="qtd" />
-    <form method="POST" id="form-values">
+    <form action="/solution" method="get" id="form-values">
       <table id="table" border="1"></table>
+      <!-- <input class="button" type="submit" value="Calcular"> -->
     </form>
+    <button id="btnTeste" class="button" type="button">TESTE</button>
+
   </div>
-  <input class="button" type="button" value="Calcular" />
   <div class="alunos">Jeferson Shimoda<br />Leandro Negrão</div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script
+    src="https://raw.githubusercontent.com/marioizquierdo/jquery.serializeJSON/master/jquery.serializejson.js"></script>
+
   <script>
     // $("#qtd").on("change", function (e) {
 
@@ -43,7 +49,7 @@
       }
       criarTabela(qtd);
     }
-    
+
     function criarTabela(qtd) {
       var html = ``;
       for (let linha = 1; linha <= qtd; linha++) {
@@ -59,6 +65,35 @@
       }
       $("#table").html(html);
     }
+  </script>
+  <script>
+    function formToJson() {
+      var formElement = document.getElementsByTagName("form")[0],
+        inputElements = formElement.getElementsByTagName("input"),
+        jsonObject = {};
+        jsonObject["qtd"] = document.getElementById("qtd").value;
+
+      for (var i = 0; i < inputElements.length; i++) {
+        var inputElement = inputElements[i];
+        jsonObject[inputElement.name] = inputElement.value;
+
+      }
+      return JSON.stringify(jsonObject);
+    }
+    $('#btnTeste').click(function () {
+      $.ajax({
+        url: '/calcular',
+        data: formToJson(),
+        type: 'POST',
+        contentType: 'application/json',
+        success: function (response) {
+          console.log(response.data);
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+    });
   </script>
 </body>
 
