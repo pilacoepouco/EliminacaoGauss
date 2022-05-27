@@ -4,34 +4,29 @@ from math import e
 from flask import Flask, flash, redirect, render_template, json, request, session, abort, jsonify
 from livereload import Server
 import json
+from urllib.parse import parse_qs
 
-# app = Flask(__name__)
-
-
-# @app.route('/')
-# def main():
-#     return render_template('index.html')
+app = Flask(__name__)
 
 
-# @app.route('/solution')
-# def solution():
-#     return render_template('solucao.html')
+@app.route('/')
+def main():
+    return render_template('index.html')
 
 
-# @app.route('/calcular', methods=["POST", "GET"])
-# def montarMatriz():
-#     if request.method == "POST":
-#         data_json = request.get_json()
-#         qtd = data_json["qtd"]
-#         print(data_json)
-#     return json.dumps({'message': 'User criado com sucesso!'})
-#     #     # return json.dumps({'message': 'User criado com sucesso!'})
-#     #     # print(request)
+@app.route('/solution')
+def solution():
+    query_decode = request.query_string.decode()
+    # valor_params = json.dumps(parse_qs(query_decode))
+    matriz = {x.split('=')[0]: int(x.split('=')[1])
+              for x in query_decode.split("&")}
+    matriz_string = json.dumps(matriz)
+    matriz_json = json.loads(matriz_string)
+    resultado_matrix, matriz_final, passos, sucesso, matrix_original = preencherMatriz(
+        int(matriz_json["qtd"]), matriz_json)
+    print(passos)
 
-
-# if __name__ == "__main__":
-#     server = Server(app.wsgi_app)
-#     server.serve()
+    return render_template('solucao.html', original=matrix_original, final=matriz_final, passos=passos)
 
 
 def preencherMatriz(qtd_linhas, matriz_datas):
@@ -39,14 +34,49 @@ def preencherMatriz(qtd_linhas, matriz_datas):
     colunas = linhas + 1
     length = linhas * (linhas+1)
     matrix = np.arange(length).reshape(linhas, colunas)+1
-    print(matrix)
+    for linha in range(linhas):
+        for coluna in range(colunas):
+            if coluna == colunas-1:
+                matrix[linha][coluna] = matriz_datas[f'b{linha+1}']
+            else:
+                matrix[linha][coluna] = matriz_datas[f'a{linha+1}{coluna+1}']
+    matrix_original = matrix
+    original_front_end = ""
+    # a & b & c \\ c & d & e \\c & d & e
+    for linha in range(linhas):
+        separator = "&"
+        string_ints = [str(int) for int in matrix_original[linha]]
+        separator = separator.join(string_ints)
+        if linha == 0:
+            original_front_end += separator
+        else:
+            original_front_end += " \\\ " + separator
+
+    resultado_matrix, matriz_final, passos, sucesso = EliminacaoGauu(
+        qtd_linhas, matrix)
+
+    final_front_end = ""
+    # a & b & c \\ c & d & e \\c & d & e
+    for linha in range(linhas):
+        separator = "&"
+        string_ints = [str(int) for int in matriz_final[linha]]
+        separator = separator.join(string_ints)
+        if linha == 0:
+            final_front_end += separator
+        else:
+            final_front_end += " \\\ " + separator
+    # print(resultado_matrix)
+    print(matriz_final)
+    # print(passos)
+    # print(sucesso)
+    return resultado_matrix, final_front_end, passos, sucesso, original_front_end
 
 
-def EliminacaoGauu(qtd_linhas, matriz_param):
-    linhas = 3
+def EliminacaoGauu(qtd_linhas, matrix):
+    linhas = qtd_linhas
     colunas = linhas + 1
     length = linhas * (linhas+1)
-    matrix = np.arange(length).reshape(linhas, colunas)+1
+    passos = []
     for linha_pivo in range(linhas-1):
         for linha in range(linha_pivo+1, linhas):
             pivo = matrix[linha_pivo][linha_pivo]
@@ -54,18 +84,42 @@ def EliminacaoGauu(qtd_linhas, matriz_param):
             for coluna in range(linha_pivo+1, colunas):
                 matrix[linha][coluna] = matrix[linha][coluna] - \
                     multi*matrix[linha_pivo][coluna]
+                passo = f'A({linha},{coluna}) = {matrix[linha][coluna]} - {multi}*{matrix[linha_pivo][coluna]}'
+                passos.append(passo)
             matrix[linha][linha_pivo] = matrix[linha][linha_pivo] - \
                 multi*matrix[linha_pivo][linha_pivo]
+            passo = f'A({linha},{linha_pivo}) = {matrix[linha][linha_pivo]} - {multi}*{matrix[linha_pivo][linha_pivo]}'
+            passos.append(passo)
     a = np.array([line[:-1] for line in matrix])
     b = [line[-1] for line in matrix]
     try:
         ans = np.linalg.solve(a, b)
-        print(ans)
+        return ans, matrix, passos, True
     except:
-        print("Não é possivel resolver a matriz")
+        return "Não é possivel resolver a matriz", matrix, passos, False
 
 
-matriz_string = '{"qtd": "2", "a11": "32", "a12": "32", "b1": "321", "a21": "321", "a22": "312", "b2": "312"}'
-# the result is a Python dictionary:
-matriz = json.loads(matriz_string)
-preencherMatriz(int(matriz["qtd"]), matriz)
+# matriz_string = '{"qtd": "2", "a11": "2", "a12": "5", "b1": "9", "a21": "10", "a22": "8", "b2": "8"}'
+# # the result is a Python dictionary:
+# matriz = json.loads(matriz_string)
+# preencherMatriz(int(matriz["qtd"]), matriz)
+
+
+@app.route('/calcular', methods=["POST", "GET"])
+def montarMatriz():
+    if request.method == "POST":
+        data_json = request.get_json()
+        qtd = data_json["qtd"]
+        # matriz = json.loads(data_json)
+        print(type(data_json))
+        # preencherMatriz(int(qtd), matriz)
+        # print(matriz)
+        # print('data', matriz)
+    return render_template('solucao.html')
+    #     # return json.dumps({'message': 'User criado com sucesso!'})
+    #     # print(request)
+
+
+if __name__ == "__main__":
+    server = Server(app.wsgi_app)
+    server.serve()

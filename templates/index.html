@@ -12,19 +12,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap"
     rel="stylesheet" />
-
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
 </head>
 
 <body>
   <h1>Cálculo Númerico</h1>
   <div id="dados">
     <h2>Eliminação de Gauss</h2>
-    <input type="number" min="2" max="10" placeholder="Mín.: 2 | Máx.: 10" id="qtd" />
     <form action="/solution" method="get" id="form-values">
+      <input type="number" min="2" max="10" placeholder="Mín.: 2 | Máx.: 10" id="qtd" name="qtd" class="qtd" />
       <table id="table" border="1"></table>
-      <!-- <input class="button" type="submit" value="Calcular"> -->
+      <input class="button" styles="width: 100%;" type="submit" value="Calcular">
+      <!-- <button id="btnTeste" class="button" type="button">Calcular</button> -->
     </form>
-    <button id="btnTeste" class="button" type="button">TESTE</button>
 
   </div>
   <div class="alunos">Jeferson Shimoda<br />Leandro Negrão</div>
@@ -71,7 +73,7 @@
       var formElement = document.getElementsByTagName("form")[0],
         inputElements = formElement.getElementsByTagName("input"),
         jsonObject = {};
-        jsonObject["qtd"] = document.getElementById("qtd").value;
+      jsonObject["qtd"] = document.getElementById("qtd").value;
 
       for (var i = 0; i < inputElements.length; i++) {
         var inputElement = inputElements[i];
