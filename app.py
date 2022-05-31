@@ -37,10 +37,12 @@ def preencherMatriz(qtd_linhas, matriz_datas):
     for linha in range(linhas):
         for coluna in range(colunas):
             if coluna == colunas-1:
-                matrix[linha][coluna] = matriz_datas[f'b{linha+1}']
+                matrix[linha][coluna] = float(matriz_datas[f'b{linha+1}'])
             else:
-                matrix[linha][coluna] = matriz_datas[f'a{linha+1}{coluna+1}']
+                matrix[linha][coluna] = float(
+                    matriz_datas[f'a{linha+1}{coluna+1}'])
     matrix_original = matrix
+    matrix = matrix.astype(np.float)
     original_front_end = ""
     # a & b & c \\ c & d & e \\c & d & e
     for linha in range(linhas):
@@ -80,15 +82,24 @@ def EliminacaoGauu(qtd_linhas, matrix):
     for linha_pivo in range(linhas-1):
         for linha in range(linha_pivo+1, linhas):
             pivo = matrix[linha_pivo][linha_pivo]
+            if pivo == 0:
+                if (linha_pivo+1 < linhas-1) and matrix[linha_pivo + 1][linha_pivo] != 0:
+                    linhaAnterior = matrix[linha_pivo]
+                    linhaPosterior = matrix[linha_pivo + 1]
+                    print('Anterior', linhaAnterior)
+                    print('Posterior', linhaPosterior)
+                    matrix[linha_pivo + 1] = linhaAnterior
+                    matrix[linha_pivo] = linhaPosterior
+            print(matrix)
             multi = matrix[linha][linha_pivo] / pivo
             for coluna in range(linha_pivo+1, colunas):
                 matrix[linha][coluna] = matrix[linha][coluna] - \
-                    multi*matrix[linha_pivo][coluna]
-                passo = f'A({linha},{coluna}) = {matrix[linha][coluna]} - {multi}*{matrix[linha_pivo][coluna]}'
+                    (multi*matrix[linha_pivo][coluna])
+                passo = f'A({linha},{coluna}) = {matrix[linha][coluna]} - ({multi}*{matrix[linha_pivo][coluna]})'
                 passos.append(passo)
             matrix[linha][linha_pivo] = matrix[linha][linha_pivo] - \
-                multi*matrix[linha_pivo][linha_pivo]
-            passo = f'A({linha},{linha_pivo}) = {matrix[linha][linha_pivo]} - {multi}*{matrix[linha_pivo][linha_pivo]}'
+                (multi*matrix[linha_pivo][linha_pivo])
+            passo = f'A({linha},{linha_pivo}) = {matrix[linha][linha_pivo]} - ({multi}*{matrix[linha_pivo][linha_pivo]})'
             passos.append(passo)
     a = np.array([line[:-1] for line in matrix])
     b = [line[-1] for line in matrix]
