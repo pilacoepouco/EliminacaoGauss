@@ -82,15 +82,20 @@ def EliminacaoGauu(qtd_linhas, matrix):
     for linha_pivo in range(linhas-1):
         for linha in range(linha_pivo+1, linhas):
             pivo = matrix[linha_pivo][linha_pivo]
-            if pivo == 0:
-                if (linha_pivo+1 < linhas-1) and matrix[linha_pivo + 1][linha_pivo] != 0:
-                    linhaAnterior = matrix[linha_pivo]
-                    linhaPosterior = matrix[linha_pivo + 1]
-                    print('Anterior', linhaAnterior)
-                    print('Posterior', linhaPosterior)
+            if pivo == 0.0:
+                print('linha 1', linha_pivo+1)
+                print('linha 2', linhas - 1)
+                if (linha_pivo+1 <= linhas-1) and matrix[linha_pivo + 1][linha_pivo] != 0:
+                    # listaAux = b[inicio].copy()  # <= aqui: cria uma cópia
+                    # b[inicio] = b[final]
+                    # b[final] = listaAux
+                    linhaAnterior = matrix[linha_pivo].copy()
+                    # POSTE = matrix[linha_pivo + 1].copy()
+                    matrix[linha_pivo] = matrix[linha_pivo + 1]
                     matrix[linha_pivo + 1] = linhaAnterior
-                    matrix[linha_pivo] = linhaPosterior
-            print(matrix)
+                    pivo = matrix[linha_pivo][linha_pivo]
+                    passo = f'Troca L{(linha_pivo+1)+1} //  por // L{linha_pivo+1}'
+                    passos.append(passo)
             multi = matrix[linha][linha_pivo] / pivo
             for coluna in range(linha_pivo+1, colunas):
                 matrix[linha][coluna] = matrix[linha][coluna] - \
