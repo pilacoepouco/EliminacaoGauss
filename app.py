@@ -94,7 +94,7 @@ def EliminacaoGauu(qtd_linhas, matrix):
                     matrix[linha_pivo] = matrix[linha_pivo + 1]
                     matrix[linha_pivo + 1] = linhaAnterior
                     pivo = matrix[linha_pivo][linha_pivo]
-                    passo = f'Troca L{(linha_pivo+1)+1} //  por // L{linha_pivo+1}'
+                    passo = f'(Troca L{(linha_pivo+1)+1}  por  L{linha_pivo+1})'
                     passos.append(passo)
             multi = matrix[linha][linha_pivo] / pivo
             for coluna in range(linha_pivo+1, colunas):
