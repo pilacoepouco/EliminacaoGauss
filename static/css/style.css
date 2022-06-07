@@ -81,3 +81,7 @@ table input {
         right: 2rem;
         font-size: 2rem;
     }
+    
+    #tipo{
+        display: inline-block;
+    }
