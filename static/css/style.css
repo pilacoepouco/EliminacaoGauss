@@ -82,6 +82,4 @@ table input {
         font-size: 2rem;
     }
     
-    #tipo{
-        display: inline-block;
-    }
+    a { color: inherit; } 

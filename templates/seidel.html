@@ -4,7 +4,7 @@
 <head>
   <title>Calculo Numerico</title>
   <meta charset="UTF-8" />
-  <meta name="description" content="Calculo Numerico | Bissecção" />
+  <meta name="description" content="Calculo Numerico | Gauss-SEIDEL" />
   <meta lang="pt-BR" />
   <link href="../static/css/style.css" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,7 +20,7 @@
 <body>
   <h1>Cálculo Númerico</h1>
   <div id="dados">
-    <h2>Eliminação de Gauss</h2>
+    <h2>Método de Gauss-Seidel</h2>
     <form action="/solution" method="get" id="form-values">
       <input type="number" min="2" max="10" placeholder="Mín.: 2 | Máx.: 10" id="qtd" name="qtd" class="qtd" />
       <table id="table" border="1"></table>
@@ -60,10 +60,13 @@
       var html = ``;
       for (let linha = 1; linha <= qtd; linha++) {
         html += `<tr>`;
-        for (let coluna = 1; coluna <= qtd + 1; coluna++) {
+        for (let coluna = 1; coluna <= qtd + 2; coluna++) {
           let name = `a${linha}${coluna}`;
           if (coluna == qtd + 1) {
             name = `b${linha}`;
+          }
+          else if (coluna == qtd + 2) {
+            name = `chute${linha}`;
           }
           html += `<td><input name="${name}" placeholder="${name}"/></td>`;
         }
