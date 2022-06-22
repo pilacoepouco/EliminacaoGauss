@@ -5,6 +5,7 @@ from flask import Flask, flash, redirect, render_template, json, request, sessio
 from livereload import Server
 import json
 from urllib.parse import parse_qs
+import scipy.linalg
 
 app = Flask(__name__)
 
@@ -114,6 +115,11 @@ def EliminacaoGauu(qtd_linhas, matrix):
     except:
         return "Não é possivel resolver a matriz", matrix, passos, False
 
+def LU(A,b) :
+    L,U = scipy.linalg.lu(A,permute_l=True)
+    y = scipy.linalg.solve(L,b)
+    x = scipy.linalg.solve_triangular(U,y)
+    return x 
 
 # matriz_string = '{"qtd": "2", "a11": "2", "a12": "5", "b1": "9", "a21": "10", "a22": "8", "b2": "8"}'
 # # the result is a Python dictionary:
