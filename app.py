@@ -23,11 +23,11 @@ def solution():
               for x in query_decode.split("&")}
     matriz_string = json.dumps(matriz)
     matriz_json = json.loads(matriz_string)
-    resultado_matrix, matriz_final, passos, sucesso, matrix_original = preencherMatriz(
+    resultado_matrix, matriz_final, passos, sucesso, matrix_original, identidade_front_end, resultadoLu = preencherMatriz(
         int(matriz_json["qtd"]), matriz_json)
     print(passos)
 
-    return render_template('solucao.html', original=matrix_original, final=matriz_final, passos=passos)
+    return render_template('solucao.html', original=matrix_original, final=matriz_final, passos=passos, identidade=identidade_front_end)
 
 
 def preencherMatriz(qtd_linhas, matriz_datas):
@@ -54,8 +54,10 @@ def preencherMatriz(qtd_linhas, matriz_datas):
             original_front_end += separator
         else:
             original_front_end += " \\\ " + separator
+    a = np.array([line[:-1] for line in matrix_original])
+    b = [line[-1] for line in matrix_original]
 
-    resultado_matrix, matriz_final, passos, sucesso = EliminacaoGauu(
+    resultado_matrix, matriz_final, passos, sucesso, indentidade = EliminacaoGauu(
         qtd_linhas, matrix)
 
     final_front_end = ""
@@ -68,11 +70,23 @@ def preencherMatriz(qtd_linhas, matriz_datas):
             final_front_end += separator
         else:
             final_front_end += " \\\ " + separator
+
+    identidade_front_end = ""
+    # a & b & c \\ c & d & e \\c & d & e
+    for linha in range(linhas):
+        separator = "&"
+        string_ints = [str(int) for int in indentidade[linha]]
+        separator = separator.join(string_ints)
+        if linha == 0:
+            identidade_front_end += separator
+        else:
+            identidade_front_end += " \\\ " + separator
     # print(resultado_matrix)
-    print(matriz_final)
     # print(passos)
     # print(sucesso)
-    return resultado_matrix, final_front_end, passos, sucesso, original_front_end
+    resultadoLu = LU(a, b)
+
+    return resultado_matrix, final_front_end, passos, sucesso, original_front_end, identidade_front_end, resultadoLu
 
 
 def EliminacaoGauu(qtd_linhas, matrix):
@@ -80,21 +94,24 @@ def EliminacaoGauu(qtd_linhas, matrix):
     colunas = linhas + 1
     length = linhas * (linhas+1)
     passos = []
+    indentidade = np.eye(qtd_linhas)
     for linha_pivo in range(linhas-1):
         for linha in range(linha_pivo+1, linhas):
             pivo = matrix[linha_pivo][linha_pivo]
             if pivo == 0.0:
-                print('linha 1', linha_pivo+1)
-                print('linha 2', linhas - 1)
                 if (linha_pivo+1 <= linhas-1) and matrix[linha_pivo + 1][linha_pivo] != 0:
                     # listaAux = b[inicio].copy()  # <= aqui: cria uma cópia
                     # b[inicio] = b[final]
                     # b[final] = listaAux
                     linhaAnterior = matrix[linha_pivo].copy()
+                    identidadeAnterior = indentidade[linha_pivo].copy()
                     # POSTE = matrix[linha_pivo + 1].copy()
                     matrix[linha_pivo] = matrix[linha_pivo + 1]
                     matrix[linha_pivo + 1] = linhaAnterior
                     pivo = matrix[linha_pivo][linha_pivo]
+
+                    indentidade[linha_pivo] = indentidade[linha_pivo + 1]
+                    indentidade[linha_pivo + 1] = identidadeAnterior
                     passo = f'(Troca L{(linha_pivo+1)+1}  por  L{linha_pivo+1})'
                     passos.append(passo)
             multi = matrix[linha][linha_pivo] / pivo
@@ -111,15 +128,18 @@ def EliminacaoGauu(qtd_linhas, matrix):
     b = [line[-1] for line in matrix]
     try:
         ans = np.linalg.solve(a, b)
-        return ans, matrix, passos, True
+        return ans, matrix, passos, True, indentidade
     except:
-        return "Não é possivel resolver a matriz", matrix, passos, False
+        return "Não é possivel resolver a matriz", matrix, passos, False, indentidade
 
-def LU(A,b) :
-    L,U = scipy.linalg.lu(A,permute_l=True)
-    y = scipy.linalg.solve(L,b)
-    x = scipy.linalg.solve_triangular(U,y)
-    return x 
+
+def LU(A, b):
+    L, U = scipy.linalg.lu(A, permute_l=True)
+    print(L)
+    print(U)
+    y = scipy.linalg.solve(L, b)
+    x = scipy.linalg.solve_triangular(U, y)
+    return x
 
 # matriz_string = '{"qtd": "2", "a11": "2", "a12": "5", "b1": "9", "a21": "10", "a22": "8", "b2": "8"}'
 # # the result is a Python dictionary:
